@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="socket.io.min.js" type="text/javascript"></script>
+    <script src="snake.js" type="text/javascript"></script>
+    <style type="text/css">
+        #canvas {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -200px 0 0 -200px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas width="400" height="400" id="canvas"></canvas>
+    <script>
+        var socket = io.connect('http://' + window.location.hostname + ':80');
+        socket.on('connect', function () {
+            var snakeGame = new SnakeGame(document.getElementById("canvas"), socket);
+
+            socket.on('gaanMetDieBanaan', function(positieVanBolleke) {
+                snakeGame.bollekeOpPositie(positieVanBolleke);
+                snakeGame.gaanMetDieBanaan();
+            });
+            socket.on('stopTerMee', function() {
+                snakeGame.stopTerMee();
+            });
+            socket.on('otherSnakeMoved', function(positions) {
+                snakeGame.updateOtherSnake(positions);
+            });
+            socket.on('youveWon', function() {
+                snakeGame.gewonnen();
+            });
+            socket.on('youveLost', function() {
+                snakeGame.gameOver();
+            });
+            socket.on('verplaatsBolleke', function(positieVanBolleke) {
+                snakeGame.bollekeOpPositie(positieVanBolleke);
+            });
+        })
+    </script>
+</body>
+</html>
