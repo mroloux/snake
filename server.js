@@ -9,11 +9,6 @@ http.createServer(function(request, response) {
     staticServer.serve(request, response);
 }).listen(9090);
 
-net.createServer(function(socket) {
-    socket.write("Hallo " + socket.remoteAddress + ":" + socket.remotePort + "\r\n");
-    socket.pipe(socket);
-}).listen(9091);
-
 var io = require('socket.io').listen(80);
 io.set('log level', 1);
 
